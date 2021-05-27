@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -31,13 +31,13 @@ class _MyHomePageState extends State<MyHomePage> {
   double bottomNavBarHeight = 60;
 
   List<TabItem> tabItems = List.of([
-    new TabItem(Icons.home, "Home", Colors.blue, labelStyle: TextStyle(fontWeight: FontWeight.normal)),
+    new TabItem(Icons.home, "Home", Colors.white, labelStyle: TextStyle(fontWeight: FontWeight.normal)),
     new TabItem(Icons.search, "Search", Colors.orange, labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
     new TabItem(Icons.layers, "Reports", Colors.red),
     new TabItem(Icons.notifications, "Notifications", Colors.cyan),
   ]);
 
-  CircularBottomNavigationController _navigationController;
+  late CircularBottomNavigationController _navigationController;
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget bodyContainer() {
     Color selectedColor = tabItems[selectedPos].circleColor;
-    String slogan;
+    late String slogan;
     switch (selectedPos) {
       case 0:
         slogan = "Familly, Happiness, Food";
@@ -100,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget bottomNav() {
     return CircularBottomNavigation(
       tabItems,
+      boxShadows: [new BoxShadow(color: Colors.grey, blurRadius: 2.0)],
       controller: _navigationController,
       barHeight: bottomNavBarHeight,
       barBackgroundColor: Colors.white,

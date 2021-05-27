@@ -5,7 +5,7 @@ import 'dart:core';
 import 'package:circular_bottom_navigation/tab_item.dart';
 import 'package:flutter/material.dart';
 
-typedef CircularBottomNavSelectedCallback =Function(int selectedPos);
+typedef CircularBottomNavSelectedCallback = Function(int selectedPos);
 
 class CircularBottomNavigation extends StatefulWidget {
   final List<TabItem> tabItems;
@@ -18,8 +18,9 @@ class CircularBottomNavigation extends StatefulWidget {
   final Color selectedIconColor;
   final Color normalIconColor;
   final Duration animationDuration;
-  final CircularBottomNavSelectedCallback selectedCallback;
-  final CircularBottomNavigationController controller;
+  final List<BoxShadow>? boxShadows;
+  final CircularBottomNavSelectedCallback? selectedCallback;
+  final CircularBottomNavigationController? controller;
 
   CircularBottomNavigation(this.tabItems,
       {this.selectedPos = 0,
@@ -32,33 +33,33 @@ class CircularBottomNavigation extends StatefulWidget {
         this.normalIconColor = Colors.grey,
         this.animationDuration = const Duration(milliseconds: 300),
         this.selectedCallback,
-        this.controller})
-      : assert(tabItems != null && tabItems.length != 0, "tabItems is required");
+        this.controller,
+        this.boxShadows})
+      : assert(tabItems.length != 0, "tabItems is required");
 
   @override
   State<StatefulWidget> createState() => _CircularBottomNavigationState();
 }
 
-class _CircularBottomNavigationState extends State<CircularBottomNavigation>
-    with TickerProviderStateMixin {
+class _CircularBottomNavigationState extends State<CircularBottomNavigation> with TickerProviderStateMixin {
   Curve _animationsCurve = Cubic(0.27, 1.21, .77, 1.09);
 
-  AnimationController itemsController;
-  Animation<double> selectedPosAnimation;
-  Animation<double> itemsAnimation;
+  late AnimationController itemsController;
+  late Animation<double> selectedPosAnimation;
+  late Animation<double> itemsAnimation;
 
-  List<double> _itemsSelectedState;
+  late List<double> _itemsSelectedState;
 
-  int selectedPos;
-  int previousSelectedPos;
+  late int selectedPos;
+  late int previousSelectedPos;
 
-  CircularBottomNavigationController _controller;
+  late CircularBottomNavigationController _controller;
 
   @override
   void initState() {
     super.initState();
     if (widget.controller != null) {
-      _controller = widget.controller;
+      _controller = widget.controller!;
       previousSelectedPos = selectedPos = _controller.value;
     } else {
       previousSelectedPos = selectedPos = widget.selectedPos;
@@ -86,16 +87,13 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
       });
     });
 
-    selectedPosAnimation =
-        makeSelectedPosAnimation(selectedPos.toDouble(), selectedPos.toDouble());
+    selectedPosAnimation = makeSelectedPosAnimation(selectedPos.toDouble(), selectedPos.toDouble());
 
-    itemsAnimation = Tween(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: itemsController, curve: _animationsCurve));
+    itemsAnimation = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: itemsController, curve: _animationsCurve));
   }
 
   Animation<double> makeSelectedPosAnimation(double begin, double end) {
-    return Tween(begin: begin, end: end)
-        .animate(CurvedAnimation(parent: itemsController, curve: _animationsCurve));
+    return Tween(begin: begin, end: end).animate(CurvedAnimation(parent: itemsController, curve: _animationsCurve));
   }
 
   void onSelectedPosAnimate() {
@@ -103,7 +101,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
   }
 
   void _newSelectedPosNotify() {
-    _setSelectedPos(widget.controller.value);
+    _setSelectedPos(widget.controller!.value);
   }
 
   @override
@@ -116,7 +114,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
     double sectionsWidth = fullWidth / widget.tabItems.length;
 
     //Create the boxes Rect
-    List<Rect> boxes = List();
+    List<Rect> boxes = [];
     widget.tabItems.asMap().forEach((i, tabItem) {
       double left = i * sectionsWidth;
       double top = fullHeight - widget.barHeight;
@@ -125,7 +123,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
       boxes.add(Rect.fromLTRB(left, top, right, bottom));
     });
 
-    List<Widget> children = List();
+    List<Widget> children = [];
 
     // This is the full view transparent background (have free space for circle)
     children.add(Container(
@@ -139,9 +137,10 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
         width: fullWidth,
         height: widget.barHeight,
         decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: widget.barBackgroundColor,
-            boxShadow: [new BoxShadow(color: Colors.grey, blurRadius: 2.0)]),
+          shape: BoxShape.rectangle,
+          color: widget.barBackgroundColor,
+          boxShadow: widget.boxShadows,
+        ),
       ),
       top: fullHeight - widget.barHeight,
       left: 0,
@@ -155,30 +154,23 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
         child: Stack(
           children: <Widget>[
             Container(
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: widget.barBackgroundColor),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: widget.barBackgroundColor),
             ),
             Container(
               margin: EdgeInsets.all(widget.circleStrokeWidth),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: widget.tabItems[selectedPos].circleColor),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: widget.tabItems[selectedPos].circleColor),
             ),
           ],
         ),
       ),
-      left: (selectedPosAnimation.value * sectionsWidth) +
-          (sectionsWidth / 2) -
-          (widget.circleSize / 2),
+      left: (selectedPosAnimation.value * sectionsWidth) + (sectionsWidth / 2) - (widget.circleSize / 2),
       top: 0,
     ));
 
     //Here are the Icons and texts of items
     boxes.asMap().forEach((int pos, Rect r) {
       // Icon
-      Color iconColor =
-      pos == selectedPos ? widget.selectedIconColor : widget.normalIconColor;
+      Color iconColor = pos == selectedPos ? widget.selectedIconColor : widget.normalIconColor;
       double scaleFactor = pos == selectedPos ? 1.2 : 1.0;
       children.add(
         Positioned(
@@ -191,9 +183,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
             ),
           ),
           left: r.center.dx - (widget.iconsSize / 2),
-          top: r.center.dy -
-              (widget.iconsSize / 2) -
-              (_itemsSelectedState[pos] * ((widget.barHeight / 2) + widget.circleStrokeWidth)),
+          top: r.center.dy - (widget.iconsSize / 2) - (_itemsSelectedState[pos] * ((widget.barHeight / 2) + widget.circleStrokeWidth)),
         ),
       );
 
@@ -220,10 +210,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
               )),
         ),
         left: r.left,
-        top: r.top +
-            (widget.circleSize / 2) -
-            (widget.circleStrokeWidth * 2) +
-            ((1.0 - _itemsSelectedState[pos]) * textHeight),
+        top: r.top + (widget.circleSize / 2) - (widget.circleStrokeWidth * 2) + ((1.0 - _itemsSelectedState[pos]) * textHeight),
       ));
 
       if (pos != selectedPos) {
@@ -249,22 +236,20 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
 
     itemsController.forward(from: 0.0);
 
-    selectedPosAnimation = makeSelectedPosAnimation(
-        previousSelectedPos.toDouble(), selectedPos.toDouble());
+    selectedPosAnimation = makeSelectedPosAnimation(previousSelectedPos.toDouble(), selectedPos.toDouble());
     selectedPosAnimation.addListener(onSelectedPosAnimate);
 
     if (widget.selectedCallback != null) {
-      widget.selectedCallback(selectedPos);
+      widget.selectedCallback!(selectedPos);
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
     itemsController.dispose();
     _controller.removeListener(_newSelectedPosNotify);
+    super.dispose();
   }
-
 }
 
 class CircularBottomNavigationController extends ValueNotifier<int> {
