@@ -19,6 +19,7 @@ class CircularBottomNavigation extends StatefulWidget {
   final Color normalIconColor;
   final Duration animationDuration;
   final List<BoxShadow>? boxShadows;
+  final Offset? notificationChipOffset;
   final CircularBottomNavSelectedCallback? selectedCallback;
   final CircularBottomNavigationController? controller;
 
@@ -34,7 +35,8 @@ class CircularBottomNavigation extends StatefulWidget {
       this.animationDuration = const Duration(milliseconds: 300),
       this.selectedCallback,
       this.controller,
-      this.boxShadows})
+      this.boxShadows,
+      this.notificationChipOffset})
       : assert(tabItems.length != 0, "tabItems is required");
 
   @override
@@ -182,8 +184,8 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
                 ),
                 if (widget.tabItems[pos].notificationBadgeListenable != null)
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: widget.notificationChipOffset?.dy ?? 0,
+                    right: widget.notificationChipOffset?.dx ?? 0,
                     child: ValueListenableBuilder<int?>(
                       valueListenable: widget.tabItems[pos].notificationBadgeListenable!,
                       builder: (context, count, child) {
