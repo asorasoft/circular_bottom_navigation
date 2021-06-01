@@ -195,7 +195,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
                             width: 16,
                             child: Material(
                               shape: CircleBorder(),
-                              color: Colors.white,
+                              color: pos == selectedPos ? widget.tabItems[pos].circleColor : Colors.white,
                               child: Padding(
                                 padding: EdgeInsets.all(2),
                                 child: Material(
