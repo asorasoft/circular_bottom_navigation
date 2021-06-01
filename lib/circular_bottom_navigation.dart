@@ -194,29 +194,22 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
                           return const SizedBox.shrink();
                         } else {
                           return SizedBox(
-                            height: 16,
-                            width: 16,
+                            height: 12,
+                            width: 12,
                             child: Material(
                               shape: CircleBorder(),
-                              color: pos == selectedPos ? widget.tabItems[pos].circleColor : Colors.white,
-                              child: Padding(
-                                padding: EdgeInsets.all(2),
-                                child: Material(
-                                  shape: CircleBorder(),
-                                  color: Colors.redAccent,
-                                  child: Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(1),
-                                      child: FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: Text(
-                                          count < 10 ? '$count' : '9+',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
+                              color: Colors.redAccent,
+                              child: Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(1),
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      count < 10 ? '$count' : '9+',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
