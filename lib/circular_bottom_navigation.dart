@@ -24,17 +24,17 @@ class CircularBottomNavigation extends StatefulWidget {
 
   CircularBottomNavigation(this.tabItems,
       {this.selectedPos = 0,
-        this.barHeight = 60,
-        this.barBackgroundColor = Colors.white,
-        this.circleSize = 58,
-        this.circleStrokeWidth = 4,
-        this.iconsSize = 32,
-        this.selectedIconColor = Colors.white,
-        this.normalIconColor = Colors.grey,
-        this.animationDuration = const Duration(milliseconds: 300),
-        this.selectedCallback,
-        this.controller,
-        this.boxShadows})
+      this.barHeight = 60,
+      this.barBackgroundColor = Colors.white,
+      this.circleSize = 58,
+      this.circleStrokeWidth = 4,
+      this.iconsSize = 32,
+      this.selectedIconColor = Colors.white,
+      this.normalIconColor = Colors.grey,
+      this.animationDuration = const Duration(milliseconds: 300),
+      this.selectedCallback,
+      this.controller,
+      this.boxShadows})
       : assert(tabItems.length != 0, "tabItems is required");
 
   @override
@@ -106,10 +106,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
 
   @override
   Widget build(BuildContext context) {
-    double fullWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double fullWidth = MediaQuery.of(context).size.width;
     double fullHeight = widget.barHeight + (widget.circleSize / 2) + widget.circleStrokeWidth;
     double sectionsWidth = fullWidth / widget.tabItems.length;
 
@@ -176,10 +173,59 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
         Positioned(
           child: Transform.scale(
             scale: scaleFactor,
-            child: Icon(
-              widget.tabItems[pos].icon,
-              size: widget.iconsSize,
-              color: iconColor,
+            child: Stack(
+              children: [
+                Icon(
+                  widget.tabItems[pos].icon,
+                  size: widget.iconsSize,
+                  color: iconColor,
+                ),
+                if (widget.tabItems[pos].notificationBadgeListener != null)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: widget.tabItems[pos].notificationBadgeListener!,
+                      builder: (context, count, child) {
+                        if (count == 0) {
+                          return const SizedBox.shrink();
+                        } else {
+                          return SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: Material(
+                              shape: CircleBorder(),
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.all(2),
+                                child: Material(
+                                  shape: CircleBorder(),
+                                  color: Colors.redAccent,
+                                  child: Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(1),
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          count < 10 ? '$count' : '9+',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+              ],
             ),
           ),
           left: r.center.dx - (widget.iconsSize / 2),
@@ -201,13 +247,13 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
           height: textHeight,
           child: Center(
               child: Opacity(
-                opacity: opacity,
-                child: Text(
-                  widget.tabItems[pos].title,
-                  textAlign: TextAlign.center,
-                  style: widget.tabItems[pos].labelStyle,
-                ),
-              )),
+            opacity: opacity,
+            child: Text(
+              widget.tabItems[pos].title,
+              textAlign: TextAlign.center,
+              style: widget.tabItems[pos].labelStyle,
+            ),
+          )),
         ),
         left: r.left,
         top: r.top + (widget.circleSize / 2) - (widget.circleStrokeWidth * 2) + ((1.0 - _itemsSelectedState[pos]) * textHeight),

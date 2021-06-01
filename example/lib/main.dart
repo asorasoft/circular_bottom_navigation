@@ -31,10 +31,15 @@ class _MyHomePageState extends State<MyHomePage> {
   double bottomNavBarHeight = 60;
 
   List<TabItem> tabItems = List.of([
-    new TabItem(Icons.home, "Home", Colors.white, labelStyle: TextStyle(fontWeight: FontWeight.normal)),
+    new TabItem(Icons.home, "Home", Colors.green, labelStyle: TextStyle(fontWeight: FontWeight.normal)),
     new TabItem(Icons.search, "Search", Colors.orange, labelStyle: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
     new TabItem(Icons.layers, "Reports", Colors.red),
-    new TabItem(Icons.notifications, "Notifications", Colors.cyan),
+    new TabItem(
+      Icons.notifications,
+      "Notifications",
+      Colors.cyan,
+      notificationBadgeListener: ValueNotifier(60),
+    ),
   ]);
 
   late CircularBottomNavigationController _navigationController;
@@ -50,7 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          Padding(child: bodyContainer(), padding: EdgeInsets.only(bottom: bottomNavBarHeight),),
+          Padding(
+            child: bodyContainer(),
+            padding: EdgeInsets.only(bottom: bottomNavBarHeight),
+          ),
           Align(alignment: Alignment.bottomCenter, child: bottomNav())
         ],
       ),
