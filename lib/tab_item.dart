@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TabItem {
@@ -5,7 +6,7 @@ class TabItem {
   String title;
   Color circleColor;
   TextStyle? labelStyle;
-  ValueNotifier<int?>? notificationBadgeListenable;
+  ValueListenable<int?>? notificationBadgeListenable;
 
   TabItem(
     this.icon,
