@@ -176,7 +176,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
           child: Transform.scale(
             scale: scaleFactor,
             child: Stack(
-              clipBehavior: Clip.antiAlias,
+              clipBehavior: Clip.none,
               children: [
                 Icon(
                   widget.tabItems[pos].icon,
