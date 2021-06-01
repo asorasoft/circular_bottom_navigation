@@ -5,13 +5,13 @@ class TabItem {
   String title;
   Color circleColor;
   TextStyle? labelStyle;
-  ValueNotifier<int>? notificationBadgeListener;
+  ValueNotifier<int?>? notificationBadgeListenable;
 
   TabItem(
     this.icon,
     this.title,
     this.circleColor, {
     this.labelStyle = const TextStyle(fontWeight: FontWeight.bold),
-    this.notificationBadgeListener,
+    this.notificationBadgeListenable,
   });
 }

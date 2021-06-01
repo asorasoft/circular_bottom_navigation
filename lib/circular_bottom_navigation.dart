@@ -180,14 +180,14 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
                   size: widget.iconsSize,
                   color: iconColor,
                 ),
-                if (widget.tabItems[pos].notificationBadgeListener != null)
+                if (widget.tabItems[pos].notificationBadgeListenable != null)
                   Positioned(
                     top: 0,
                     right: 0,
-                    child: ValueListenableBuilder<int>(
-                      valueListenable: widget.tabItems[pos].notificationBadgeListener!,
+                    child: ValueListenableBuilder<int?>(
+                      valueListenable: widget.tabItems[pos].notificationBadgeListenable!,
                       builder: (context, count, child) {
-                        if (count == 0) {
+                        if (count == null || count == 0) {
                           return const SizedBox.shrink();
                         } else {
                           return SizedBox(

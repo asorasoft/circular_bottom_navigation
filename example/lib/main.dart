@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Icons.notifications,
       "Notifications",
       Colors.cyan,
-      notificationBadgeListener: ValueNotifier(60),
+      notificationBadgeListenable: ValueNotifier(60),
     ),
   ]);
 
