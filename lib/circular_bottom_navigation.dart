@@ -109,9 +109,7 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation> wit
   @override
   void didChangeDependencies() {
     if (selectedPos >= widget.tabItems.length) {
-      setState(() {
-        selectedPos = 0;
-      });
+      _setSelectedPos(0);
     }
     super.didChangeDependencies();
   }
