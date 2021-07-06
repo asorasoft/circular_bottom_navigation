@@ -36,14 +36,16 @@ class CircularBottomNavigation extends StatefulWidget {
       this.selectedCallback,
       this.controller,
       this.boxShadows,
-      this.notificationChipOffset})
-      : assert(tabItems.length != 0, "tabItems is required");
+      this.notificationChipOffset,
+      Key? key})
+      : assert(tabItems.length != 0, "tabItems is required"),
+      super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CircularBottomNavigationState();
+  State<StatefulWidget> createState() => CircularBottomNavigationState();
 }
 
-class _CircularBottomNavigationState extends State<CircularBottomNavigation> with TickerProviderStateMixin {
+class CircularBottomNavigationState extends State<CircularBottomNavigation> with TickerProviderStateMixin {
   Curve _animationsCurve = Cubic(0.27, 1.21, .77, 1.09);
 
   late AnimationController itemsController;
